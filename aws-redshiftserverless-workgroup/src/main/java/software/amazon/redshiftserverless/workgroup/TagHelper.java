@@ -189,4 +189,3 @@ public class TagHelper {
         return Sets.difference(new HashSet<>(previousTags), new HashSet<>(desiredTags));
     }
 }
-
