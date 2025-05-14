@@ -47,7 +47,7 @@ public class Translator {
      * @param model resource model
      * @return awsRequest the aws service request to create a resource
      */
-    static CreateWorkgroupRequest translateToCreateRequest(final ResourceModel model,  final List<Tag>mergedTags) {
+    static CreateWorkgroupRequest translateToCreateRequest(final ResourceModel model,  final Set<Tag>mergedTags) {
         return CreateWorkgroupRequest.builder()
                 .workgroupName(model.getWorkgroupName())
                 .namespaceName(model.getNamespaceName())
@@ -303,15 +303,15 @@ public class Translator {
             effectiveDesiredTags = desiredResourceState.getTags();
         }
 
-        List<Tag> toBeCreatedTags = effectiveDesiredTags == null ? Collections.emptyList() : effectiveDesiredTags
+        Set<Tag> toBeCreatedTags = effectiveDesiredTags == null ? Collections.emptySet() : effectiveDesiredTags
                 .stream()
                 .filter(tag -> currentResourceState.getTags() == null || !currentResourceState.getTags().contains(tag))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
-        List<Tag> toBeDeletedTags = currentResourceState.getTags() == null ? Collections.emptyList() : currentResourceState.getTags()
+        Set<Tag> toBeDeletedTags = currentResourceState.getTags() == null ? Collections.emptySet() : currentResourceState.getTags()
                 .stream()
                 .filter(tag -> effectiveDesiredTags == null || !effectiveDesiredTags.contains(tag))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
         return UpdateTagsRequest.builder()
                 .createNewTagsRequest(TagResourceRequest.builder()
@@ -329,8 +329,8 @@ public class Translator {
     }
 
     static UpdateTagsRequest translateToUpdateTagsRequest(Map<String, String> previousTags, Map<String, String>desiredTags, String resourceArn) {
-        List<Tag> toBeCreatedTags = convertToTagList(generateTagsToAdd(previousTags, desiredTags));
-        List<String> tagKeysToBeDeleted = generateTagsToRemove(previousTags, desiredTags);
+        Set<Tag> toBeCreatedTags = convertToTagSet(generateTagsToAdd(previousTags, desiredTags));
+        Set<String> tagKeysToBeDeleted = generateTagsToRemove(previousTags, desiredTags);
 
         return UpdateTagsRequest.builder()
                 .createNewTagsRequest(TagResourceRequest.builder()
@@ -348,11 +348,11 @@ public class Translator {
         return GSON.fromJson(GSON.toJson(tag), software.amazon.awssdk.services.redshiftserverless.model.Tag.class);
     }
 
-    private static List<software.amazon.awssdk.services.redshiftserverless.model.Tag> translateToSdkTags(final List<Tag> tags) {
+    private static Set<software.amazon.awssdk.services.redshiftserverless.model.Tag> translateToSdkTags(final Set<Tag> tags) {
         return tags == null ? null : tags
                 .stream()
                 .map(Translator::translateToSdkTag)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     private static Tag translateToModelTag(software.amazon.awssdk.services.redshiftserverless.model.Tag tag) {

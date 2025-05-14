@@ -27,7 +27,7 @@ import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.regex.Pattern;
-import java.util.List;
+import java.util.Set;
 
 public class CreateHandler extends BaseHandlerStd {
 
@@ -53,7 +53,7 @@ public class CreateHandler extends BaseHandlerStd {
                                 })
                 )
                 .then(progress -> {
-                        List<Tag> mergedTags = TagHelper.convertToTagList(
+                        Set<Tag> mergedTags = TagHelper.convertToTagSet(
                                 TagHelper.mergeTags(
                                         request,
                                         TagHelper.convertToMap(request.getDesiredResourceState().getTags()),

@@ -187,7 +187,7 @@ _Required_: No
 
 _Type_: List of <a href="tag.md">Tag</a>
 
-_Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement)
+_Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
 
 #### FinalSnapshotName
 
@@ -302,3 +302,4 @@ Returns the <code>Status</code> value.
 #### CreationDate
 
 Returns the <code>CreationDate</code> value.
+
